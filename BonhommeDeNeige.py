@@ -69,6 +69,8 @@ for i in range(0, 90):
     time.sleep(0.03)
     ren_win.Render()
 
+    print(body_actor.GetPosition()[0])
+
     head_actor.RotateZ(-1)
 
 # Attach head and body
@@ -96,7 +98,7 @@ for i in range(0, 90):
 renderer.AddActor(left_eye_actor)
 renderer.AddActor(right_eye_actor)
 
-# Attach head and body
+# Go up eyes and nose
 for i in range(0, 50):
     time.sleep(0.03)
     ren_win.Render()
@@ -105,8 +107,36 @@ for i in range(0, 50):
     le_position = left_eye_actor.GetPosition()
     re_position = right_eye_actor.GetPosition()
 
-    nose_actor.SetPosition(nose_position[0], nose_position[1], nose_position[2] + 0.015)
+    nose_actor.SetPosition(nose_position[0], nose_position[1], nose_position[2] + 0.012)
     left_eye_actor.SetPosition(le_position[0], le_position[1], le_position[2] + 0.008)
     right_eye_actor.SetPosition(re_position[0], re_position[1], re_position[2] + 0.008)
+
+# Camera 360 on Roll
+for i in range(0, 360):
+    time.sleep(0.03)
+
+    renderer.GetActiveCamera().Roll(1)
+    ren_win.Render()
+
+# Camera 360 on Azimuth
+for i in range(0, 360):
+    time.sleep(0.03)
+
+    renderer.GetActiveCamera().Azimuth(1)
+    ren_win.Render()
+
+# Camera 90 on Elevation
+for i in range(0, 90):
+    time.sleep(0.03)
+
+    renderer.GetActiveCamera().Elevation(1)
+    ren_win.Render()
+
+# Camera 90 on Elevation
+for i in range(0, 90):
+    time.sleep(0.03)
+
+    renderer.GetActiveCamera().Elevation(-1)
+    ren_win.Render()
 
 time.sleep(5)
