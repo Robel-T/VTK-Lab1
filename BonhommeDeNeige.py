@@ -2,65 +2,59 @@ import vtk
 import time
 
 
+def create_sphere(center, theta_resolution=50, phi_resolution=50):
+    sphere = vtk.vtkSphereSource()
+    sphere.SetThetaResolution(theta_resolution)
+    sphere.SetPhiResolution(phi_resolution)
+    sphere.SetCenter(center[0], center[1], center[2])
+
+    return sphere
 
 
-#Creation de la première grosse sphère
-downBody = vtk.vtkSphereSource()
-downBody.SetThetaResolution(50)
-downBody.SetCenter(3,0,0)
-downBody.SetPhiResolution(50)
+def create_cone(center, height, direction, resolution=50):
+    cone = vtk.vtkConeSource()
+    cone.SetHeight(height)
+    cone.SetResolution(resolution)
+    cone.SetDirection(direction[0], direction[1], direction[2])
+    cone.SetCenter(center[0], center[1], center[2])
 
-#Creation de la deuxieme sphère
-upBody = vtk.vtkSphereSource()
-upBody.SetThetaResolution(50)
-upBody.SetCenter(1,0,0)
-upBody.SetPhiResolution(50)
-
-#Creation du nez
-nose = vtk.vtkConeSource()
-nose.SetHeight(0.3)
-nose.SetResolution(50)
-nose.SetCenter(5,0,0)
-nose.SetDirection(0,-1,0)
+    return cone
 
 
+def create_actor(obj):
+    obj_mapper = vtk.vtkPolyDataMapper()
+    obj_mapper.SetInputConnection(obj.GetOutputPort())
 
-#Creation du mapping
-downBodyMapper = vtk.vtkPolyDataMapper()
-downBodyMapper.SetInputConnection(downBody.GetOutputPort())
+    obj_actor = vtk.vtkActor()
+    obj_actor.SetMapper(obj_mapper)
 
-upBodyMapper = vtk.vtkPolyDataMapper()
-upBodyMapper.SetInputConnection(upBody.GetOutputPort())
+    return obj_actor
 
-noseMapper = vtk.vtkPolyDataMapper()
-noseMapper.SetInputConnection(nose.GetOutputPort())
 
-#Creation de l'acteur
-downBodyActor = vtk.vtkActor()
-downBodyActor.SetMapper(downBodyMapper)
+body = create_sphere((3, 0, 0))
+head = create_sphere((1, 0, 0))
+nose = create_cone((5, 0, 0), 0.3, (0, -1, 0))
 
-upBodyActor = vtk.vtkActor()
-upBodyActor.SetMapper(upBodyMapper)
+body_actor = create_actor(body)
+head_actor = create_actor(head)
+nose_actor = create_actor(nose)
 
-noseActor = vtk.vtkActor()
-noseActor.SetMapper(noseMapper)
-noseActor.GetProperty().SetColor(1, 0.741, 0)
+nose_actor.GetProperty().SetColor(1, 0.741, 0)
 
-#Creation du renderer
+
+# Create renderer
 renderer = vtk.vtkRenderer()
-renderer.AddActor(downBodyActor)
-renderer.AddActor(upBodyActor)
-renderer.AddActor(noseActor)
-renderer.SetBackground(0.1,0.1,0.1)
-#renderer.SetViewport(0,0,1,1)
+renderer.AddActor(body_actor)
+renderer.AddActor(head_actor)
+renderer.AddActor(nose_actor)
+renderer.SetBackground(0.1, 0.1, 0.1)
+# renderer.SetViewport(0,0,1,1)
 
 
-#Creation du rendererWindow
+# Create window
 renWin = vtk.vtkRenderWindow()
 renWin.AddRenderer(renderer)
 renWin.SetSize(600, 600)
-
-
 
 #
 # Now we loop over 360 degreeees and render the cone each time.
@@ -75,23 +69,22 @@ renWin.SetSize(600, 600)
 #     ren1.GetActiveCamera().Azimuth(1)
 #     ren2.GetActiveCamera().Azimuth(1)
 
-for i in range(0,180):
+for i in range(0, 180):
     time.sleep(0.03)
     renWin.Render()
 
-    downBody.SetRadius(0.7)
-    upBody.SetRadius(0.5)
+    body.SetRadius(0.7)
+    head.SetRadius(0.5)
     nose.SetRadius(0.08)
 
     translator = vtk.vtkTransform()
     translator.Translate(0, 0, 0)
     translator.RotateZ(1)
 
-    upBodyActor.SetUserTransform(translator)
+    head_actor.SetUserTransform(translator)
 
-    #ren2.GetActiveCamera().Pitch(-0.1)
-    #ren2.GetActiveCamera().Yaw(0.1)
-
+    # ren2.GetActiveCamera().Pitch(-0.1)
+    # ren2.GetActiveCamera().Yaw(0.1)
 
 # #iren
 # iren = vtk.vtkRenderWindowInteractor()
