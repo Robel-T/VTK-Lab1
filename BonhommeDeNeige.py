@@ -35,13 +35,21 @@ def create_actor(obj):
 
 body = create_sphere(0.7, (0, 0, 0))
 head = create_sphere(0.5, (-1.5, 0, 0))
-nose = create_cone(0.08, (1.1, 0, 0), 0.3, (0, -1, 0))
+nose = create_cone(0.08, (1.05, 0, 0), 0.3, (0, -1, 0))
+
+left_eye = create_sphere(0.1, (-0.15, 1.2, 0))
+right_eye = create_sphere(0.1, (0.15, 1.2, 0))
 
 body_actor = create_actor(body)
 head_actor = create_actor(head)
 nose_actor = create_actor(nose)
 
+left_eye_actor = create_actor(left_eye)
+right_eye_actor = create_actor(right_eye)
+
 nose_actor.GetProperty().SetColor(1, 0.741, 0)
+left_eye_actor.GetProperty().SetColor(0, 0, 0)
+right_eye_actor.GetProperty().SetColor(0, 0, 0)
 
 # Create renderer
 renderer = vtk.vtkRenderer()
@@ -63,14 +71,13 @@ for i in range(0, 90):
 
     head_actor.RotateZ(-1)
 
-
 # Attach head and body
 for i in range(0, 40):
     time.sleep(0.03)
     ren_win.Render()
 
-    position = head_actor.GetPosition()
-    head_actor.SetPosition(position[0], position[1]-0.01, position[2])
+    nose_position = head_actor.GetPosition()
+    head_actor.SetPosition(nose_position[0], nose_position[1] - 0.01, nose_position[2])
 
 # Rotate the nose above the body
 for i in range(0, 90):
@@ -86,5 +93,20 @@ for i in range(0, 90):
 
     nose_actor.RotateZ(1)
 
+renderer.AddActor(left_eye_actor)
+renderer.AddActor(right_eye_actor)
+
+# Attach head and body
+for i in range(0, 50):
+    time.sleep(0.03)
+    ren_win.Render()
+
+    nose_position = nose_actor.GetPosition()
+    le_position = left_eye_actor.GetPosition()
+    re_position = right_eye_actor.GetPosition()
+
+    nose_actor.SetPosition(nose_position[0], nose_position[1], nose_position[2] + 0.015)
+    left_eye_actor.SetPosition(le_position[0], le_position[1], le_position[2] + 0.008)
+    right_eye_actor.SetPosition(re_position[0], re_position[1], re_position[2] + 0.008)
 
 time.sleep(5)
