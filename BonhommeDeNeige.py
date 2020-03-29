@@ -56,6 +56,7 @@ renWin = vtk.vtkRenderWindow()
 renWin.AddRenderer(renderer)
 renWin.SetSize(600, 600)
 
+# Put the head above the body
 for i in range(0, 90):
     time.sleep(0.03)
     renWin.Render()
@@ -64,3 +65,13 @@ for i in range(0, 90):
     translator.RotateZ(-i)
 
     head_actor.SetUserTransform(translator)
+
+# Attach head and body
+for i in range(0, 50):
+    time.sleep(0.03)
+    renWin.Render()
+
+    position = head_actor.GetPosition()
+    head_actor.SetPosition(position[0]+0.01, position[1], position[2])
+
+time.sleep(5)
