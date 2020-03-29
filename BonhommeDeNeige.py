@@ -35,7 +35,7 @@ def create_actor(obj):
 
 body = create_sphere(0.7, (0, 0, 0))
 head = create_sphere(0.5, (-1.5, 0, 0))
-nose = create_cone(0.08, (1.5, 0, 0), 0.3, (0, -1, 0))
+nose = create_cone(0.08, (1.1, 0, 0), 0.3, (0, -1, 0))
 
 body_actor = create_actor(body)
 head_actor = create_actor(head)
@@ -52,26 +52,39 @@ renderer.SetBackground(0.1, 0.1, 0.1)
 
 
 # Create window
-renWin = vtk.vtkRenderWindow()
-renWin.AddRenderer(renderer)
-renWin.SetSize(600, 600)
+ren_win = vtk.vtkRenderWindow()
+ren_win.AddRenderer(renderer)
+ren_win.SetSize(600, 600)
 
 # Put the head above the body
 for i in range(0, 90):
     time.sleep(0.03)
-    renWin.Render()
+    ren_win.Render()
 
-    translator = vtk.vtkTransform()
-    translator.RotateZ(-i)
+    head_actor.RotateZ(-1)
 
-    head_actor.SetUserTransform(translator)
 
 # Attach head and body
-for i in range(0, 50):
+for i in range(0, 40):
     time.sleep(0.03)
-    renWin.Render()
+    ren_win.Render()
 
     position = head_actor.GetPosition()
-    head_actor.SetPosition(position[0]+0.01, position[1], position[2])
+    head_actor.SetPosition(position[0], position[1]-0.01, position[2])
+
+# Rotate the nose above the body
+for i in range(0, 90):
+    time.sleep(0.03)
+    ren_win.Render()
+
+    nose_actor.RotateY(-1)
+
+# Put the nose in the head
+for i in range(0, 90):
+    time.sleep(0.03)
+    ren_win.Render()
+
+    nose_actor.RotateZ(1)
+
 
 time.sleep(5)
