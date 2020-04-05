@@ -1,6 +1,7 @@
 import vtk
 import time
 
+WAITING_TIME = 0.02
 
 def create_sphere(radius, center, theta_resolution=50, phi_resolution=50):
     sphere = vtk.vtkSphereSource()
@@ -33,6 +34,13 @@ def create_actor(obj):
     return obj_actor
 
 
+def loop_camera(max_range, camera_function ,value_camera, ren_win):
+    for i in range(0,max_range):
+        time.sleep(WAITING_TIME)
+        ren.GetActiveCamera().camera_function(value_camera)
+        ren_win.Render()
+
+
 body = create_sphere(0.7, (0, 0, 0))
 head = create_sphere(0.5, (-1.5, 0, 0))
 nose = create_cone(0.08, (1.05, 0, 0), 0.3, (0, -1, 0))
@@ -58,15 +66,22 @@ renderer.AddActor(head_actor)
 renderer.AddActor(nose_actor)
 renderer.SetBackground(0.1, 0.1, 0.1)
 
+# Create camera
+cam = vtk.vtkCamera()
+cam.SetFocalPoint(0,0,0)
+cam.SetPosition(0,0,10)
+
+renderer.SetActiveCamera(cam)
 
 # Create window
 ren_win = vtk.vtkRenderWindow()
 ren_win.AddRenderer(renderer)
 ren_win.SetSize(600, 600)
 
+
 # Put the head above the body
 for i in range(0, 90):
-    time.sleep(0.03)
+    time.sleep(WAITING_TIME)
     ren_win.Render()
 
     print(body_actor.GetPosition()[0])
@@ -75,7 +90,7 @@ for i in range(0, 90):
 
 # Attach head and body
 for i in range(0, 40):
-    time.sleep(0.03)
+    time.sleep(WAITING_TIME)
     ren_win.Render()
 
     nose_position = head_actor.GetPosition()
@@ -83,14 +98,14 @@ for i in range(0, 40):
 
 # Rotate the nose above the body
 for i in range(0, 90):
-    time.sleep(0.03)
+    time.sleep(WAITING_TIME)
     ren_win.Render()
 
     nose_actor.RotateY(-1)
 
 # Put the nose in the head
 for i in range(0, 90):
-    time.sleep(0.03)
+    time.sleep(WAITING_TIME)
     ren_win.Render()
 
     nose_actor.RotateZ(1)
@@ -100,7 +115,7 @@ renderer.AddActor(right_eye_actor)
 
 # Go up eyes and nose
 for i in range(0, 50):
-    time.sleep(0.03)
+    time.sleep(WAITING_TIME)
     ren_win.Render()
 
     nose_position = nose_actor.GetPosition()
@@ -111,30 +126,32 @@ for i in range(0, 50):
     left_eye_actor.SetPosition(le_position[0], le_position[1], le_position[2] + 0.008)
     right_eye_actor.SetPosition(re_position[0], re_position[1], re_position[2] + 0.008)
 
+
+
 # Camera 360 on Roll
 for i in range(0, 360):
-    time.sleep(0.03)
+    time.sleep(WAITING_TIME)
 
     renderer.GetActiveCamera().Roll(1)
     ren_win.Render()
 
 # Camera 360 on Azimuth
 for i in range(0, 360):
-    time.sleep(0.03)
+    time.sleep(WAITING_TIME)
 
     renderer.GetActiveCamera().Azimuth(1)
     ren_win.Render()
 
 # Camera 90 on Elevation
 for i in range(0, 90):
-    time.sleep(0.03)
+    time.sleep(WAITING_TIME)
 
     renderer.GetActiveCamera().Elevation(1)
     ren_win.Render()
 
 # Camera 90 on Elevation
 for i in range(0, 90):
-    time.sleep(0.03)
+    time.sleep(WAITING_TIME)
 
     renderer.GetActiveCamera().Elevation(-1)
     ren_win.Render()
